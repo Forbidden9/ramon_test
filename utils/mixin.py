@@ -9,11 +9,12 @@ class TimestampsMixin:
     
 class ActiveMixin:
     is_active = Column(Boolean, server_default="1")
-    
+
+
 @event.listens_for(Session, "do_orm_execute")
 def filtering_active_criteria(execute_state):
-    active_filter = execute_state.execution_options.get("active_filter", False)
-    if execute_state.is_select and not active_filter:
+    skip_filter = execute_state.execution_options.get("skip_filter", False)
+    if execute_state.is_select and not skip_filter:
         execute_state.statement = execute_state.statement.options(
             with_loader_criteria(
                 ActiveMixin,
