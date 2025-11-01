@@ -1,12 +1,10 @@
 import logging
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
-from instabot import Bot
 from config.config import settings
 from core import router as core_router
-from db.session import reboot_database
 
-logging.basicConfig(level=logging.INFO)
+_logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title = str(settings.PROJECT_NAME),
@@ -18,10 +16,8 @@ app.include_router(core_router)
 
 @app.get("/")
 def read_root():
-    return JSONResponse(content={"message": "Bienvenido, Gracias por usar la API de Test"})
-
-@app.get("/reboot_database", summary="Reboot database", description="Roboot database")
-async def create_tables():
-    await reboot_database()
-    return JSONResponse(content={"message": "Reboot database successfully !!!"})
-FastAPI()
+    try:
+        return JSONResponse(content={"message": "Bienvenido, Gracias por usar la API de Test"})
+    except Exception as e:
+        _logger.error("ERROR: %s", str(e), exc_info=True)
+        return JSONResponse(content={"error": str(e)}, status_code=500)
