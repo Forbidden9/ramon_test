@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import Column, ForeignKey, Integer, Sequence, String, ARRAY
+from sqlalchemy import Column, ForeignKey, Integer, Sequence, String
 from sqlalchemy.orm import relationship
 
 from core.tag_post.model import TagPost
